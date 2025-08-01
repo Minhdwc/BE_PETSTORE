@@ -1,15 +1,15 @@
-const Category = require('../models/category.model')
+const Brand = require('../models/brand.model');
 
 const create = (data)=>{
     return new Promise((resolve, reject)=>{
         try{
-            const category = new Category(data);
-            category.save();
+            const brand = new Brand(data);
+            brand.save();
             resolve({
                 status: "Success",
-                data: category,
-                message: "Category created successfully"
-            });
+                data: brand,
+                message: "Brand created successfully"
+            })
         }catch(e){
             reject(e);
         }
@@ -19,23 +19,24 @@ const create = (data)=>{
 const getAll = (page, limit)=>{
     return new Promise((resolve, reject)=>{
         try{
-            const skip = (page - 1) * limit;
+            const skip = (page - 1) *  limit;
             Promise.all([
-                Category.find().skip(skip).limit(limit),
-                Category.countDocuments()
-            ]).then(([categories, total])=>{
+                Brand,find().skip(skip).limit(limit),
+                Brand.countDocuments()
+            ])
+            .then(([brands, total])=>{
                 resolve({
                     status: "Success",
-                    data: categories,
-                    pagination: {
+                    data: brands,
+                    pagination:{
                         total,
                         page,
                         limit,
                         totalPages: Math.ceil(total / limit)
                     },
-                    message: `Get all categories successfully, page: ${page}, limit: ${limit}`
-                });
-            });
+                    message: `Get all brands successfully, page: ${page}, limit: ${limit}`
+                })
+            })
         }catch(e){
             reject(e);
         }
@@ -45,12 +46,12 @@ const getAll = (page, limit)=>{
 const getById = (id)=>{
     return new Promise((resolve, reject)=>{
         try{
-            const category = Category.findById(id);
+            const brand = Brand.findById(id);
             resolve({
                 status: "Success",
-                data: category,
-                message: "Category found successfully"
-            });
+                data: brand,
+                message: "Brand found successfully"
+            })
         }catch(e){
             reject(e);
         }
@@ -60,14 +61,15 @@ const getById = (id)=>{
 const update = (id, data)=>{
     return new Promise((resolve, reject)=>{
         try{
-            const category = Category.findByIdAndUpdate(id, data,{ new: true });
-            category.save();
+            const brand = Brand.findOneAndUpdate(id, data,{ new: true });
+            brand.save();
             resolve({
                 status: "Success",
-                data: category,
-                message: "Category updated successfully"
+                data: brand,
+                message: "Brand updated successfully"
             })
-        }catch(e){
+        }
+        catch(e){
             reject(e);
         }
     })
@@ -76,10 +78,10 @@ const update = (id, data)=>{
 const deleteById = (id)=>{
     return new Promise((resolve, reject)=>{
         try{
-            Category.findByIdAndDelete(id);
+            Brand.findByIdAndDelete(id)
             resolve({
                 status: "Success",
-                message: "Category deleted successfully"
+                message: "Brand deleted successfully"
             });
         }catch(e){
             reject(e);
@@ -93,4 +95,4 @@ module.exports = {
     getById,
     update,
     deleteById
-    };
+}
