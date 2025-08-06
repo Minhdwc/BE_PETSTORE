@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const OrderSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     itemType: { type: String, required: true, enum: ["Product", "Pet"] },
-    itemId: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'itemType' },
+    itemIdType: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'itemType' },
     items:[
         {
             id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'itemType' },

@@ -12,7 +12,7 @@ const UserSchema = new Schema({
       display_name: { type: String },
       lat: { type: Number },
       lon: { type: Number },
-      address: { type: Object }
+      address: { type: String }
     }
   ]
 });
