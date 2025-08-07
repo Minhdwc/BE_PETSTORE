@@ -1,10 +1,9 @@
 const Review = require("../models/review.model")
 
 const create = (data)=>{
-    return new Promise((resolve, reject)=>{
+    return new Promise(async(resolve, reject)=>{
         try{
-            const review = new Review(data)
-            review.save();
+            const review = await Review.create(data)
             resolve({
                 status:"Success",
                 data: review,
@@ -16,24 +15,17 @@ const create = (data)=>{
     })
 }
 const getAll = (page, limit) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
             const skip = (page - 1) * limit;
-            Promise.all([
-                Review.find().skip(skip).limit(limit),
-                Review.countDocuments()
-            ]).then(([reviews, total]) => {
-                resolve({
-                    status: "Success",
-                    data: reviews,
-                    pagination: {
-                        total,
-                        page,
-                        limit,
-                        totalPages: Math.ceil(total / limit)
-                    },
-                    message: `Get all reivews successfully, page: ${page}, limit: ${limit}`
-                });
+            const filter = {};
+            const reviews = await Review.find(filter).skip(skip).limit(limit);
+            const total = await Review.countDocuments(filter);
+            resolve({
+                total,
+                currentPage: page,
+                totalPages: Math.ceil(total / limit),
+                data: reviews,
             });
         } catch (e) {
             reject(e);
@@ -42,14 +34,14 @@ const getAll = (page, limit) => {
 }
 
 const getById =(id)=>{
-    return new Promise((resolve, reject)=>{
+    return new Promise(async(resolve, reject)=>{
         try{
-            const review = Review.findById(id)
+            const review = await Review.findById(id)
             resolve({
                 status: "Success",
                 data: review,
-                message: "Review found successfully"
-            })
+                message: "Review found successfully",
+            });
         }catch(e){
             reject(e)
         }
@@ -57,14 +49,14 @@ const getById =(id)=>{
 }
 
 const update = (id, data)=>{
-    return new Promise((resolve, reject)=>{
+    return new Promise(async(resolve, reject)=>{
         try{
-            const review = Review.findByIdAndUpdate(id, data, {new: true})
+            const review = await Review.findByIdAndUpdate(id, data, {new: true})
             resolve({
                 status: "Success",
                 data: review,
-                message: "Review updated successfully"
-            })
+                message: "Review updated successfully",
+            });
         }catch(e){
             reject(e)
         }
@@ -72,13 +64,13 @@ const update = (id, data)=>{
 }
 
 const deleteById = (id) =>{
-    return new Promise((resolve, reject)=>{
+    return new Promise(async(resolve, reject)=>{
         try{
-            Review.findByIdAndDelete(id)
+            await Review.findByIdAndDelete(id)
             resolve({
                 status: "Success",
-                message: "Review deleted successfully"
-            })
+                message: "Review deleted successfully",
+            });
         }catch(e){
             reject(e)
         }
@@ -90,5 +82,5 @@ module.exports = {
     getAll,
     getById,
     update,
-    deleteById
-}
+    deleteById,
+};

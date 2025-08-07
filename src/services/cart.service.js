@@ -1,10 +1,9 @@
 const Cart = require("../models/cart.model");
 
 const create = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      const cart = new Cart(data);
-      cart.save();
+      const cart = await Cart.create(data);
       resolve({
         status: "Success",
         data: cart,
@@ -17,24 +16,17 @@ const create = (data) => {
 };
 
 const getAll = (page, limit) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const skip = (page - 1) * limit;
-      Promise.all([
-        Cart.find().skip(skip).limit(limit),
-        Cart.countDocuments(),
-      ]).then(([carts, total]) => {
-        resolve({
-          status: "Success",
-          data: carts,
-          pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-          },
-          message: `Get all carts successfully, page: ${page}, limit: ${limit}`,
-        });
+      const filter = {};
+      const carts = await Cart.find(filter).skip(skip).limit(limit);
+      const total = await Cart.countDocuments(filter);
+      resolve({
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        data: carts,
       });
     } catch (e) {
       reject(e);
@@ -42,10 +34,10 @@ const getAll = (page, limit) => {
   });
 };
 
-const getByIdUser = (idUser) => {
-  return new Promise((resolve, reject) => {
+const getById = (id) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      const cart = Cart.find({ userId: idUser });
+      const cart = await Cart.findById(id);
       resolve({
         status: "Success",
         data: cart,
@@ -57,40 +49,39 @@ const getByIdUser = (idUser) => {
   });
 };
 
-const update = (id, data)=>{
-    return new Promise((resolve, reject)=>{
-        try{
-            const cart = Cart.findByIdAndUpdate(id, data,{ new: true })
-            cart.save();
-            resolve({
-                status: "Success",
-                data: cart,
-                message: "Cart updated successfully"
-            })
-        }catch(e){
-            reject(e)
-        }
-    })
-}
+const update = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const cart = await Cart.findByIdAndUpdate(id, data, { new: true });
+      resolve({
+        status: "Success",
+        data: cart,
+        message: "Cart updated successfully",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
-const deleteById = (id)=>{
-    return new Promise((resolve, reject)=>{
-        try{
-            Cart.findByIdAndDelete(id);
-            resolve({
-                status: "Success",
-                message: "Cart deleted successfully"
-            })
-        }catch(e){
-            reject(e);
-        }
-    })
-}
+const deleteById = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Cart.findByIdAndDelete(id);
+      resolve({
+        status: "Success",
+        message: "Cart deleted successfully",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 module.exports = {
-    create,
-    getAll,
-    getByIdUser,
-    update,
-    deleteById
-}
+  create,
+  getAll,
+  getById,
+  update,
+  deleteById,
+};

@@ -17,11 +17,14 @@ const corOptions = {
 }
 //connect to database
 connectDB();
-router(app);
+
 app.use(cors(corOptions))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true}))
 app.use(bodyParser.json());
+
+router(app);
+
 
 const PORT = 5000;
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`));
