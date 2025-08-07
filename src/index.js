@@ -2,9 +2,9 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
 //import database connection
 const connectDB = require('./config/db.config');
+const router = require('./routes/index.routes')
 
 //import variables
 require("dotenv").config();
@@ -17,6 +17,7 @@ const corOptions = {
 }
 //connect to database
 connectDB();
+router(app);
 app.use(cors(corOptions))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true}))
