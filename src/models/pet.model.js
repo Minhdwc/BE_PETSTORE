@@ -3,15 +3,15 @@ const Schema = mongoose.Schema;
 
 const PetSchema = new Schema({
     name: { type: String, required: true },
-    species: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Species'},
+    species: { type: String, require: true},
     generic: { type: String, required: true },
-    gender: { type: String, required: true, enum:["Male", "Female"] },
+    gender: { type: Boolean, required: true },
     age: { type: Number, required: true },
     breed: { type: String, required: true },
     price: { type: Number, required: true },
     description: { type: String },
     image_url: { type: String },
-    status: { type: String, enum: ['available', 'pending', 'sold'], default: 'available' },
+    status: { type: String, enum: ['available', 'sold'], default: 'available' },
     createdAt: { type: Date, default: Date.now },
 })
 
