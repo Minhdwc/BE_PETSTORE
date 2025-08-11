@@ -7,7 +7,6 @@ const orderRouter = require('./notification.routes');
 const petRouter = require('./pet.routes')
 const productionRouter = require('./production.routes');
 const reviewRouter = require('./review.routes');
-const speciesRouter = require('./species.routes')
 const userRouter = require('./user.routes')
 const authRouter = require('./auth.routes')
 
@@ -22,7 +21,6 @@ const routes =(app)=>{
     app.use(path + '/pet', petRouter);
     app.use(path + '/production', productionRouter);
     app.use(path + '/review', reviewRouter);
-    app.use(path + '/species', speciesRouter);
     app.use(path + '/user', userRouter);
 }
 

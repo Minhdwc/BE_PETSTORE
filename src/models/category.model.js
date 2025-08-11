@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CategorySchema = new Schema({
-    name: { type: String, require: true, unique: true },
+    name: { type: String, required: true, unique: true },
+    type: { type: String, enum:["Pet", "Product"], required: true},
     description: { type: String },
-    createAt: { type: Date, default: Date.now()}
+    createAt: { type: Date, default: Date.now}
 })
 
 const Category = mongoose.model('Category', CategorySchema);

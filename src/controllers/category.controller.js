@@ -3,27 +3,29 @@ const categoryService = require("../services/category.service")
 
 const Schema = joi.object({
     name: joi.string().required(),
+    type: joi.string().valid("Pet", "Product").required(),
     description: joi.string()
 })
 
 const create = (req, res)=>{
     try{
         const data = req.body;
-        const {error, values} = Schema.valid(data);
+        const {error, value} = Schema.validate(data);
         if(error){
             return res.status(400).json({message: error.message})
         }
-        const response = categoryService.create(values);
+        const response = categoryService.create(value);
         return res.status(200).json({response})
     }catch(err){
         return res.status(500).json({message: err.message})
     }
 }
 
-const getAll = (req, res)=>{
+
+const getAll = async(req, res)=>{
     try{
         const { page, limit } = req.query
-        const response = categoryService.getAll(page, limit);
+        const response = await categoryService.getAll(page, limit);
         return res.status(200).json({response})
     }catch(err){
         return res.status(500).json({message: err.message})
