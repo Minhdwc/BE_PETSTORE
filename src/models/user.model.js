@@ -14,7 +14,8 @@ const UserSchema = new Schema({
       lon: { type: Number },
       address: { type: String }
     }
-  ]
+  ],
+  refreshToken: {type: String}
 });
 
 const User = mongoose.model("User", UserSchema);

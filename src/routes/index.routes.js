@@ -9,9 +9,11 @@ const productionRouter = require('./production.routes');
 const reviewRouter = require('./review.routes');
 const speciesRouter = require('./species.routes')
 const userRouter = require('./user.routes')
+const authRouter = require('./auth.routes')
 
 const routes =(app)=>{
     const path = '/api/v1';
+    app.use(path + '/auth', authRouter);
     app.use(path + '/appointment', appointmentRouter);
     app.use(path + '/cart', cartRouter);
     app.use(path + '/category', categoryRouter);
