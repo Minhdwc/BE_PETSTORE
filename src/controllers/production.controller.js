@@ -27,7 +27,8 @@ const create = (req, res) => {
 
 const getAll = (req, res) => {
   try {
-    const response = productionService.getAll();
+    const { page, limit } = req.query
+    const response = productionService.getAll(page, limit);
     return res.status(200).json({ response });
   } catch (err) {
     return res.status(500).json({ message: err.message });

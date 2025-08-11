@@ -24,7 +24,8 @@ const create = async(req, res)=>{
 
 const getAll = async(req, res)=>{
     try{
-        const appointments = await appointmentServices.getAll();
+        const { page, limit } = req.query
+        const appointments = await appointmentServices.getAll(page, limit);
         return res.status(200).json({appointments})
     }catch(err){
         return res.status(500).json({message: err.message})

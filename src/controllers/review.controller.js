@@ -26,7 +26,8 @@ const create = (req, res)=>{
 
 const getAll = (req, res)=>{
     try{
-        const response = reviewService.getAll();
+        const { page, limit } = req.query
+        const response = reviewService.getAll(page, limit);
         return res.status(200).json({response})
     }catch(err){
         return res.status(500).json({message: err.message})

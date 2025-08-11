@@ -36,7 +36,8 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const response = await userService.getAll();
+    const {page, limit} = req.query
+    const response = await userService.getAll(page, limit);
     return res.status(200).json({ response });
   } catch (err) {
     return res.status(500).json({ message: err.message });

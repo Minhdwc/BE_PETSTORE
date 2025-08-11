@@ -34,7 +34,8 @@ const create = (req, res)=>{
 
 const getAll = (req, res)=>{
     try{
-        const response = orderService.getAll();
+        const { page, limit } = req.query
+        const response = orderService.getAll(page, limit);
         return res.status(200).json({response})
     }catch(err){
         return res.status(500).json({message: err.message})
