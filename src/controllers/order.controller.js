@@ -26,7 +26,7 @@ const create = (req, res)=>{
             return res.status(400).json({message: error.message})
         }
         const response = orderService.create(values);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -36,7 +36,7 @@ const getAll = (req, res)=>{
     try{
         const { page, limit } = req.query
         const response = orderService.getAll(page, limit);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -49,7 +49,7 @@ const getById = (req, res)=>{
             return res.status(400).json({message: "Invalid"})
         }
         const response = orderService.getById(id);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -63,7 +63,7 @@ const update = (req, res)=>{
             return res.status(400).json({message: "Invalid Id"})
         }
         const response = orderService.update(id, data);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -76,7 +76,7 @@ const deleteById = (req, res)=>{
             return res.status(400).json({message: "Invalid Id"})
         }
         const response = orderService.deleteById(id)
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }

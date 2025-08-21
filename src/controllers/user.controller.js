@@ -27,7 +27,7 @@ const create = async (req, res) => {
 
     const response = await userService.create(value);
 
-    return res.status(200).json({ response });
+    return res.status(200).json(response);
   } catch (err) {
     console.error("Error creating user:", err);
     return res.status(500).json({ message: err.message });
@@ -38,7 +38,7 @@ const getAll = async (req, res) => {
   try {
     const {page, limit} = req.query
     const response = await userService.getAll(page, limit);
-    return res.status(200).json({ response });
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -51,7 +51,7 @@ const getById = async (req, res) => {
       return res.status(400).json({ message: "Invalid" });
     }
     const response = await userService.getById(id);
-    return res.status(200).json({ response });
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -65,7 +65,7 @@ const update = async(req, res) => {
       return res.status(400).json({ message: "Invalid Id" });
     }
     const response = await userService.update(id, data);
-    return res.status(200).json({ response });
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -78,7 +78,7 @@ const deleteById = async (req, res) => {
       return res.status(400).json({ message: "Invalid Id" });
     }
     const response = await userService.deleteById(id);
-    return res.status(200).json({ response });
+    return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

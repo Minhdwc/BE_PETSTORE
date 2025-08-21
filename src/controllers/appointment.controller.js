@@ -16,7 +16,7 @@ const create = async(req, res)=>{
             return res.status(400).json({message: error.message});
         }
         const response = await appointmentServices.create(values);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -25,8 +25,8 @@ const create = async(req, res)=>{
 const getAll = async(req, res)=>{
     try{
         const { page, limit } = req.query
-        const appointments = await appointmentServices.getAll(page, limit);
-        return res.status(200).json({appointments})
+        const response = await appointmentServices.getAll(page, limit);
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -41,7 +41,7 @@ const getByID = async(req, res)=>{
         if(!response){
             return res.status(404).json({message: "Appointment not found"})
         }
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -55,7 +55,7 @@ const update = async(req, res)=>{
             return res.status(400).json({message: "Invalid Id"})
         }
         const response = await appointmentServices.update(id, data);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
@@ -68,7 +68,7 @@ const deleteById = async(req, res)=>{
             return res.status(400).json({message: "Invalid Id"})
         }
         const response = await appointmentServices.deleteById(id);
-        return res.status(200).json({response})
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }

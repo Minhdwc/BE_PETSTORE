@@ -12,7 +12,7 @@ require("dotenv").config();
 const app = express();
 //config cors
 const corOptions = {
-    origin: ["*"],
+    origin: "http://localhost:5173",
     credentials: true,
 }
 //connect to database
