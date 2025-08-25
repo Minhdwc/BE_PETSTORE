@@ -1,16 +1,10 @@
 const joi = require("joi")
-const petService = require("../services/pet.service")
+const favouriteService = require("../services/favourite.service")
 
 const Schema = joi.object({
-    name: joi.string().required(),
-    species: joi.string().required(),
-    generic: joi.string().required(),
-    age: joi.number().required(),
-    breed: joi.string().required(),
-    price: joi.number().required(),
-    description: joi.string(),
-    image_url: joi.string(),
-    status: joi.string()
+    userId: joi.string().required(),
+    itemType: joi.string().required(),
+    itemIdType: joi.string().required()
 })
 
 const create = async (req, res)=>{
@@ -20,7 +14,7 @@ const create = async (req, res)=>{
         if(error){
             return res.status(400).json({message: error.message})
         }
-        const response = await petService.create(values);
+        const response = await favouriteService.create(values);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -29,8 +23,8 @@ const create = async (req, res)=>{
 
 const getAll = async (req, res)=>{
     try{
-        const { species, generic, gender, age, breed, maxPrice, minPrice , status, page, limit  } = req.query
-        const response = await petService.getAll(species, generic, gender, age, breed, maxPrice, minPrice , status, page, limit);
+        const { userId, page, limit  } = req.query
+        const response = await favouriteService.getAll( userId, page, limit);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -43,7 +37,7 @@ const getById = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid"})
         }
-        const response = petService.getById(id);
+        const response = favouriteService.getById(id);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -57,7 +51,7 @@ const update = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid Id"})
         }
-        const response = petService.update(id, data);
+        const response = favouriteService.update(id, data);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -70,7 +64,7 @@ const deleteById = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid Id"})
         }
-        const response = petService.deleteById(id)
+        const response = favouriteService.deleteById(id)
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})

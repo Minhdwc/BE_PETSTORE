@@ -6,6 +6,6 @@ router.post("/create", userController.create);
 router.get('/all', userController.getAll);
 router.get('/detail/u=:id', userController.getById);
 router.post('/update/u=:id', userController.update);
-router.delete('/delete/u=:id', userController.deleteById)
+router.delete('/delete/u=:id', userController.deleteById);
 
 module.exports = router

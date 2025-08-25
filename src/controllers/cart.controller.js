@@ -7,7 +7,7 @@ const Schema = joi.object({
         joi.object({
             itemId: joi.string().required(),
             itemType: joi.string().valid("Pet", "Product"),
-            quantity: joi.number().required(),
+            quantity: joi.number(),
             price: joi.number().required()
         })
     ),
@@ -20,8 +20,12 @@ const create = (req, res)=>{
         const data = req.body;
         const { error, values } = Schema.validate(data);
         if(error){
-            return status(400).json({message: error.message})
+            return res.status(400).json({message: error.message})
         }
+        if (req.user && req.user._id) {
+            values.userId = req.user._id.toString();
+        }
+        
         const response = cartService.create(values);
         return res.status(200).json(response)
     }catch(err){
@@ -31,11 +35,21 @@ const create = (req, res)=>{
 
 const getAll = (req, res)=>{
     try{
-        const {page, limit} = req.query
-        const response = cartService.getAll(page, limit);
-        return res.status(200).json(response)
+        const {page, limit} = req.query;
+        
+        // Get userId from authenticated user (from middleware)
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({message: "User not authenticated"});
+        }
+        
+        const userId = req.user._id.toString();
+        
+        // Call service with userId - use getByUserId for better user-specific handling
+        const response = cartService.getByUserId(userId, page || 1, limit || 10);
+        return res.status(200).json(response);
     }catch(err){
-        return res.status(500).json({message: err.message})
+        console.error("Error getting cart:", err);
+        return res.status(500).json({message: err.message});
     }
 }
 
@@ -46,7 +60,7 @@ const getByID = (req, res)=>{
             return res.status(400).json({message: "Invalid id"})
         }
         const response = cartService.getByIdUser(id);
-        return res.status(200).jsoon(response)
+        return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
