@@ -15,13 +15,39 @@ const create = (data) => {
   });
 };
 
-const getAll = (page, limit) => {
+const getAll = (userId, page = 1, limit = 10) => {
   return new Promise(async (resolve, reject) => {
     try {
       const skip = (page - 1) * limit;
-      const filter = {};
+      const filter = userId ? { userId } : {};
+      
       const carts = await Cart.find(filter).skip(skip).limit(limit);
       const total = await Cart.countDocuments(filter);
+      resolve({
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        data: carts,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const getByUserId = (userId, page = 1, limit = 10) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        return reject(new Error("UserId is required"));
+      }
+      
+      const skip = (page - 1) * limit;
+      const filter = { userId };
+      
+      const carts = await Cart.find(filter).skip(skip).limit(limit);
+      const total = await Cart.countDocuments(filter);
+      
       resolve({
         total,
         currentPage: page,
@@ -49,10 +75,15 @@ const getById = (id) => {
   });
 };
 
-const update = (id, data) => {
+const update = (userId, items) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const cart = await Cart.findByIdAndUpdate(id, data, { new: true });
+      let cart = await Cart.findOne({ userId });
+        cart.items = items || [];
+        cart.totalQuantity = items ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+        cart.totalPrice = items ? items.reduce((sum, item) => sum + (item.price * item.quantity), 0) : 0;
+        await cart.save();
+      
       resolve({
         status: "Success",
         data: cart,
@@ -81,6 +112,7 @@ const deleteById = (id) => {
 module.exports = {
   create,
   getAll,
+  getByUserId,
   getById,
   update,
   deleteById,

@@ -1,35 +1,30 @@
 const joi = require("joi")
-const notificationService = require("../services/notification.service")
+const favouriteService = require("../services/favourite.service")
 
 const Schema = joi.object({
-    message: joi.string().required(),
-    type: joi.string().required(),
-    isRead: joi.boolean().default("false")
+    userId: joi.string().required(),
+    itemType: joi.string().required(),
+    itemIdType: joi.string().required()
 })
 
-const create = (req, res)=>{
+const create = async (req, res)=>{
     try{
         const data = req.body;
         const {error, values} = Schema.valid(data);
-        const idUser = req.user?._id;
-        if(!idUser){
-            return res.status(401).json({ message: "Unauthorized" });
-        }
         if(error){
             return res.status(400).json({message: error.message})
         }
-        const response = notificationService.create(values);
+        const response = await favouriteService.create(values);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
 }
 
-const getAll = async(req, res)=>{
+const getAll = async (req, res)=>{
     try{
-        const { page, limit } = req.query
-        const userId = req.user?._id;
-        const response = await notificationService.getAll( userId, page, limit);
+        const { userId, page, limit  } = req.query
+        const response = await favouriteService.getAll( userId, page, limit);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -42,7 +37,7 @@ const getById = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid"})
         }
-        const response = notificationService.getById(id);
+        const response = favouriteService.getById(id);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -56,7 +51,7 @@ const update = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid Id"})
         }
-        const response = notificationService.update(id, data);
+        const response = favouriteService.update(id, data);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -69,7 +64,7 @@ const deleteById = (req, res)=>{
         if(!id){
             return res.status(400).json({message: "Invalid Id"})
         }
-        const response = notificationService.deleteById(id)
+        const response = favouriteService.deleteById(id)
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})

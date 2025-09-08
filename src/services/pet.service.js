@@ -15,17 +15,40 @@ const create = (data) => {
   });
 };
 
-const getAll = (page, limit) => {
+const getAll = (species, generic, gender, age, breed, maxPrice, minPrice, status, page, limit) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const skip = (page - 1) * limit;
       const filter = {};
-      const pets = await Pet.find(filter).skip(skip).limit(limit);
-      const total = await Pet.countDocuments(filter);
+
+      if (species) filter.species = species;
+      if (generic) filter.generic = generic;
+      if (gender) filter.gender = gender;
+      if (age) filter.age = age;
+      if (breed) filter.breed = breed;
+      if (status) filter.status = status;
+
+      if (maxPrice && minPrice) {
+        filter.price = { $gte: minPrice, $lte: maxPrice };
+      } else if (minPrice && maxPrice === undefined) {
+        filter.price = { $gte: min };
+      } else if (maxPrice && minPrice === undefined) {
+        filter.price = { $lte: max };
+      }
+
+      let petFilter = Pet.find(filter);
+
+      let total = await Pet.countDocuments(filter);
+      if (page && limit) {
+        const skip = (page - 1) * limit;
+        petFilter = petFilter.skip(skip).limit(limit);
+      }
+
+      const pets = await petFilter;
+
       resolve({
         total,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
+        currentPage: page || 1,
+        totalPages: limit ? Math.ceil(total / limit) : 1,
         data: pets,
       });
     } catch (e) {
@@ -33,6 +56,7 @@ const getAll = (page, limit) => {
     }
   });
 };
+
 
 const getById = (id) => {
   return new Promise(async (resolve, reject) => {

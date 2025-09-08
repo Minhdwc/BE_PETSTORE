@@ -34,6 +34,16 @@ const create = async (req, res) => {
   }
 };
 
+const myDetail = async(req, res)=>{
+  try{
+    const token = req.headers.authorization.split(" ")[1];
+    const response = await userService.myDetail(token);
+    return res.status(200).json(response);
+  }catch(err){
+    return res.status(500).json({ message: err.message });
+  }
+}
+
 const getAll = async (req, res) => {
   try {
     const {page, limit} = req.query
@@ -87,6 +97,7 @@ const deleteById = async (req, res) => {
 module.exports = {
   create,
   getAll,
+  myDetail,
   getById,
   update,
   deleteById,

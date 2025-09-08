@@ -13,37 +13,37 @@ const Schema = joi.object({
     status: joi.string()
 })
 
-const create = (req, res)=>{
+const create = async (req, res)=>{
     try{
         const data = req.body;
         const {error, values} = Schema.valid(data);
         if(error){
             return res.status(400).json({message: error.message})
         }
-        const response = petService.create(values);
+        const response = await petService.create(values);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
 }
 
-const getAll = (req, res)=>{
+const getAll = async (req, res)=>{
     try{
-        const { page, limit } = req.query
-        const response = petService.getAll(page, limit);
+        const { species, generic, gender, age, breed, maxPrice, minPrice , status, page, limit  } = req.query
+        const response = await petService.getAll(species, generic, gender, age, breed, maxPrice, minPrice , status, page, limit);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
 }
 
-const getById = (req, res)=>{
+const getById = async(req, res)=>{
     try{
         const id = req.params.id;
         if(!id){
             return res.status(400).json({message: "Invalid"})
         }
-        const response = petService.getById(id);
+        const response = await petService.getById(id);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})

@@ -12,6 +12,7 @@ const generateAccessToken = (user) => {
     process.env.JWT_SECRET,
     { expiresIn: "15m" }
   );
+  
 };
 
 const generateRefreshToken = (user) => {
@@ -36,7 +37,7 @@ const register = (data) => {
           message: "Email already",
         });
       }
-      const hashPassword = bcrypt.hash(data.password, 10);
+      const hashPassword = await bcrypt.hash(data.password, 10);
       const createData = {
         ...data,
         password: hashPassword,
