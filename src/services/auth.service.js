@@ -61,7 +61,7 @@ const login = (email, password) => {
       if (!user) {
         return reject({
           status: "Error",
-          message: "User not found",
+          message: "Vui lòng kiểm tra lại thông tin người dùng",
         });
       }
 
@@ -69,7 +69,7 @@ const login = (email, password) => {
       if (!checkUser) {
         return reject({
           status: "Error",
-          message: "Invalid password",
+          message: "Mật khẩu chưa chính xác",
         });
       }
 
