@@ -12,6 +12,7 @@ const generateAccessToken = (user) => {
     process.env.JWT_SECRET,
     { expiresIn: "15m" }
   );
+  
 };
 
 const generateRefreshToken = (user) => {

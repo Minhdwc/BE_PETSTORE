@@ -23,7 +23,6 @@ const getAll = (userId, page = 1, limit = 10) => {
       
       const carts = await Cart.find(filter).skip(skip).limit(limit);
       const total = await Cart.countDocuments(filter);
-      
       resolve({
         total,
         currentPage: page,
@@ -76,10 +75,15 @@ const getById = (id) => {
   });
 };
 
-const update = (id, data) => {
+const update = (userId, items) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const cart = await Cart.findByIdAndUpdate(id, data, { new: true });
+      let cart = await Cart.findOne({ userId });
+        cart.items = items || [];
+        cart.totalQuantity = items ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+        cart.totalPrice = items ? items.reduce((sum, item) => sum + (item.price * item.quantity), 0) : 0;
+        await cart.save();
+      
       resolve({
         status: "Success",
         data: cart,

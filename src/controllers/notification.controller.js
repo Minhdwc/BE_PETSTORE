@@ -2,7 +2,6 @@ const joi = require("joi")
 const notificationService = require("../services/notification.service")
 
 const Schema = joi.object({
-    userId: joi.string().required(),
     message: joi.string().required(),
     type: joi.string().required(),
     isRead: joi.boolean().default("false")
@@ -12,6 +11,10 @@ const create = (req, res)=>{
     try{
         const data = req.body;
         const {error, values} = Schema.valid(data);
+        const idUser = req.user?._id;
+        if(!idUser){
+            return res.status(401).json({ message: "Unauthorized" });
+        }
         if(error){
             return res.status(400).json({message: error.message})
         }
@@ -22,10 +25,11 @@ const create = (req, res)=>{
     }
 }
 
-const getAll = (req, res)=>{
+const getAll = async(req, res)=>{
     try{
         const { page, limit } = req.query
-        const response = notificationService.getAll(page, limit);
+        const userId = req.user?._id;
+        const response = await notificationService.getAll( userId, page, limit);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})

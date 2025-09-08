@@ -2,7 +2,7 @@ const joi = require("joi")
 const cartService = require("../services/cart.service")
 
 const Schema = joi.object({
-    userId: joi.string().required(),
+    userId: joi.string(),
     items: joi.array().items(
         joi.object({
             itemId: joi.string().required(),
@@ -15,37 +15,32 @@ const Schema = joi.object({
     totalPrice: joi.number()
 })
 
-const create = (req, res)=>{
+const create = async (req, res)=>{
     try{ 
         const data = req.body;
-        const { error, values } = Schema.validate(data);
+        const { error, value } = Schema.validate(data);
         if(error){
             return res.status(400).json({message: error.message})
         }
-        if (req.user && req.user._id) {
-            values.userId = req.user._id.toString();
+
+        const idUser = req.user?.id;
+        if(!idUser){
+            return res.status(401).json({ message: "Unauthorized" });
         }
-        
-        const response = cartService.create(values);
+
+        const values = { ...value, userId: idUser };
+        const response = await cartService.create(values);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
     }
 }
 
-const getAll = (req, res)=>{
+const getByID = async (req, res)=>{
     try{
         const {page, limit} = req.query;
-        
-        // Get userId from authenticated user (from middleware)
-        if (!req.user || !req.user._id) {
-            return res.status(401).json({message: "User not authenticated"});
-        }
-        
-        const userId = req.user._id.toString();
-        
-        // Call service with userId - use getByUserId for better user-specific handling
-        const response = cartService.getByUserId(userId, page || 1, limit || 10);
+        const userId = String(req.user.id);
+        const response = await cartService.getAll(userId, page || 1, limit || 10);
         return res.status(200).json(response);
     }catch(err){
         console.error("Error getting cart:", err);
@@ -53,27 +48,14 @@ const getAll = (req, res)=>{
     }
 }
 
-const getByID = (req, res)=>{
+const update = async (req, res)=>{
     try{
-        const id = req.params.id;
-        if(!id){
-            return res.status(400).json({message: "Invalid id"})
+        const userId = req.user?.id;
+        if(!userId){
+            return res.status(401).json({ message: "Unauthorized" });
         }
-        const response = cartService.getByIdUser(id);
-        return res.status(200).json(response)
-    }catch(err){
-        return res.status(500).json({message: err.message})
-    }
-}
-
-const update = (req, res)=>{
-    try{
-        const id = req.params.id;
-        const data = req.body;
-        if(!id){
-            return res.status(400).json({message: "Invalid Id"});
-        }
-        const response = cartService.update(data);
+        const { items } = req.body || {};
+        const response = await cartService.update(String(userId), items || []);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -95,7 +77,7 @@ const deleteById = (req, res)=>{
 
 module.exports = {
     create,
-    getAll,
+    // getAll,
     getByID,
     update,
     deleteById

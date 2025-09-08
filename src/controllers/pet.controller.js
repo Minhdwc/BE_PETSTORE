@@ -37,13 +37,13 @@ const getAll = async (req, res)=>{
     }
 }
 
-const getById = (req, res)=>{
+const getById = async(req, res)=>{
     try{
         const id = req.params.id;
         if(!id){
             return res.status(400).json({message: "Invalid"})
         }
-        const response = petService.getById(id);
+        const response = await petService.getById(id);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
