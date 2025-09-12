@@ -18,16 +18,32 @@ const create = (data) => {
 const getAll = (page, limit) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const skip = (page - 1) * limit;
             const filter = {};
-            const products = await Product.find(filter).skip(skip).limit(limit);
-            const total = await Product.countDocuments(filter);
-            resolve({
-                total,
-                currentPage: page,
-                totalPages: Math.ceil(total / limit),
-                data: products,
-            });
+            if (page !== undefined && limit !== undefined) {
+                const pageNum = Number(page) || 1;
+                const limitNum = Number(limit) || 10;
+                const skip = (pageNum - 1) * limitNum;
+
+                const [products, total] = await Promise.all([
+                    Product.find(filter).skip(skip).limit(limitNum),
+                    Product.countDocuments(filter),
+                ]);
+
+                resolve({
+                    total,
+                    currentPage: pageNum,
+                    totalPages: Math.ceil(total / limitNum),
+                    data: products,
+                });
+            } else {
+                const products = await Product.find(filter);
+                resolve({
+                    total: products.length,
+                    currentPage: 1,
+                    totalPages: 1,
+                    data: products,
+                });
+            }
         } catch (e) {
             reject(e);
         }
@@ -78,10 +94,26 @@ const deleteById = (id) => {
     });
 };
 
+const searchByName = (keyword, limit = 10) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const query = keyword ? { name: { $regex: keyword, $options: 'i' } } : {};
+            const results = await Product.find(query).limit(Number(limit));
+            resolve({
+                total: results.length,
+                data: results,
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     create,
     getAll,
     getById,
     update,
     deleteById,
+    searchByName,
 };

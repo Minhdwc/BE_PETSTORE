@@ -77,10 +77,21 @@ const deleteById = (req, res)=>{
     }
 }
 
+const search = async (req, res) => {
+    try {
+        const { q, limit } = req.query;
+        const response = await petService.searchByName(q, limit || 10);
+        return res.status(200).json(response);
+    } catch (err) {
+        return res.status(500).json({message: err.message})
+    }
+}
+
 module.exports = {
     create,
     getAll,
     getById,
     update,
-    deleteById
+    deleteById,
+    search
 }

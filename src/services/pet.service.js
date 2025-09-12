@@ -102,10 +102,26 @@ const deleteById = (id) => {
   });
 };
 
+const searchByName = (keyword, limit = 10) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = keyword ? { name: { $regex: keyword, $options: "i" } } : {};
+      const results = await Pet.find(query).limit(Number(limit));
+      resolve({
+        total: results.length,
+        data: results,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
   deleteById,
+  searchByName,
 };
