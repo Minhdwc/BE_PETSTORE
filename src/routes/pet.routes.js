@@ -4,6 +4,7 @@ const petController = require("../controllers/pet.controller");
 
 router.post("/create", petController.create);
 router.get('/all', petController.getAll);
+router.get('/search', petController.search);
 router.get('/detail/u=:id', petController.getById);
 router.post('/update/u=:id', petController.update);
 router.delete('/delete/u=:id', petController.deleteById)

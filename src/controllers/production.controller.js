@@ -11,64 +11,74 @@ const Schema = joi.object({
   description: joi.string(),
 });
 
-const create = (req, res) => {
+const create = async(req, res) => {
   try {
     const data = req.body;
     const { error, values } = Schema.valid(data);
     if (error) {
       return res.status(400).json({ message: error.message });
     }
-    const response = productionService.create(values);
+    const response = await productionService.create(values);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-const getAll = (req, res) => {
+const getAll = async (req, res) => {
   try {
     const { page, limit } = req.query
-    const response = productionService.getAll(page, limit);
+    const response = await productionService.getAll(page, limit);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-const getById = (req, res) => {
+const getById = async (req, res) => {
   try {
     const id = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Invalid" });
     }
-    const response = productionService.getById(id);
+    const response = await productionService.getById(id);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-const update = (req, res) => {
+const update = async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body;
     if (!id) {
       return res.status(400).json({ message: "Invalid Id" });
     }
-    const response = productionService.update(id, data);
+    const response = await productionService.update(id, data);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-const deleteById = (req, res) => {
+const deleteById = async (req, res) => {
   try {
     const id = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Invalid Id" });
     }
-    const response = productionService.deleteById(id);
+    const response = await productionService.deleteById(id);
+    return res.status(200).json(response);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+const search = async (req, res) => {
+  try {
+    const { q, limit } = req.query;
+    const response = await productionService.searchByName(q, limit || 10);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -81,4 +91,5 @@ module.exports = {
   getById,
   update,
   deleteById,
+  search,
 };
