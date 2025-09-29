@@ -3,15 +3,16 @@ const Schema = mongoose.Schema;
 
 const FavouriteSchema = new Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  
-  item: [
+  items: [
     {
       itemType: { type: String, required: true, enum: ["Product", "Pet"] },
-      itemIdType: {
+      itemId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         refPath: "itemType",
       },
+      quantity: { type: Number, default: 1 },
+      price: { type: Number, default: 0 },
     },
   ],
   createdAt: { type: Date, default: Date.now },
