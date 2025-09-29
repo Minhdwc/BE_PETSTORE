@@ -54,8 +54,8 @@ const update = async (req, res)=>{
         if(!userId){
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const { items } = req.body || {};
-        const response = await cartService.update(String(userId), items || []);
+        const { items } = req.body;
+        const response = await cartService.update(userId, items);
         return res.status(200).json(response)
     }catch(err){
         return res.status(500).json({message: err.message})
@@ -77,7 +77,6 @@ const deleteById = (req, res)=>{
 
 module.exports = {
     create,
-    // getAll,
     getByID,
     update,
     deleteById

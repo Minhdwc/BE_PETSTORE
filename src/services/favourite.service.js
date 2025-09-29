@@ -50,10 +50,13 @@ const getById = (id) => {
   });
 };
 
-const update = (id, data) => {
+const update = (userId, items) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const favoutire = await Favourite.findByIdAndUpdate(id, data, { new: true });
+      let favoutire = await Favourite.findOne({ userId });
+        favoutire.items = items || [];
+        await favoutire.save();
+      
       resolve({
         status: "Success",
         data: favoutire,
@@ -64,6 +67,7 @@ const update = (id, data) => {
     }
   });
 };
+
 
 const deleteById = (id) => {
   return new Promise(async (resolve, reject) => {

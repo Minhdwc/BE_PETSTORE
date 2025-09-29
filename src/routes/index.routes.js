@@ -7,6 +7,7 @@ const orderRouter = require('./order.routes');
 const petRouter = require('./pet.routes')
 const productionRouter = require('./production.routes');
 const reviewRouter = require('./review.routes');
+const serviceRouter = require('./service.routes');
 const userRouter = require('./user.routes')
 const authRouter = require('./auth.routes')
 const favouriteRouter = require('./favourite.routes');
@@ -22,6 +23,7 @@ const routes =(app)=>{
     app.use(path + '/pet', petRouter);
     app.use(path + '/production', productionRouter);
     app.use(path + '/review', reviewRouter);
+    app.use(path + '/service', serviceRouter);
     app.use(path + '/favourite', favouriteRouter);
     app.use(path + '/user', userRouter);
 }
