@@ -1,31 +1,7 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const { generateAccessToken, generateRefreshToken } = require("../provider/jwt.service");
 
-const generateAccessToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      name: user.name,
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "15m" }
-  );
-  
-};
-
-const generateRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      name: user.name,
-      role: user.role,
-    },
-    process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "7d" }
-  );
-};
 
 const register = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -108,6 +84,18 @@ const logout = (id)=>{
     }
   })
 }
+
+// const refresh = (token)=>{
+//   return new Promise(async(resolve, reject)=>{
+//     try{
+//       const decoded = jwt.decode(token);
+//       const exp = decoded.exp * 1000;
+//       if()
+//     }catch(err){
+//       reject(err)
+//     }
+//   })
+// }
 
 module.exports = {
   register,

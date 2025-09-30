@@ -32,12 +32,11 @@ const getAll = (category, isActive, minPrice, maxPrice, page, limit, sortBy, sor
 
       let serviceFilter = Service.find(filter);
 
-      // Sorting
       const sortOptions = {};
       if (sortBy) {
         sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
       } else {
-        sortOptions.createdAt = -1; // Default sort by newest first
+        sortOptions.createdAt = -1;
       }
       serviceFilter = serviceFilter.sort(sortOptions);
 

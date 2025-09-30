@@ -32,7 +32,7 @@ const create = async (req, res)=>{
 
 const getAll = async (req, res)=>{
     try{
-        const userId = req.user?.id; // Get userId from authenticated user
+        const userId = req.user?.id;
         const { page = 1, limit = 10 } = req.query
         const pageNum = Number(page) || 1;
         const limitNum = Number(limit) || 10;

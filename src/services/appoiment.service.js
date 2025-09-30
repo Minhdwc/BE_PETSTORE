@@ -1,4 +1,4 @@
-const Appointment = require("../models/appointment.model");
+const { Appointment } = require("../models/appointment.model");
 
 const create = (data) => {
   return new Promise(async (resolve, reject) => {
