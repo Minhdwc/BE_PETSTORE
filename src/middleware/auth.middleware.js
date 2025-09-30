@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const { generateAccessToken } = require("../provider/jwt.service");
 
 const isAuthen = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -16,6 +17,10 @@ const isAuthen = async (req, res, next) => {
 
     if (!userId) {
       return res.status(401).json({ message: "Invalid token: no user ID" });
+    }
+    if(decode.exp * 1000 - new Date().getTime() < 1000 * 60 * 5) {
+      console.log("đã cấp lại token mới");
+      generateAccessToken(decode);
     }
 
     const user = await User.findById(userId);

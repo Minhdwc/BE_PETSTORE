@@ -34,15 +34,6 @@ const create = async (req, res) => {
   }
 };
 
-const myDetail = async(req, res)=>{
-  try{
-    const token = req.headers.authorization.split(" ")[1];
-    const response = await userService.myDetail(token);
-    return res.status(200).json(response);
-  }catch(err){
-    return res.status(500).json({ message: err.message });
-  }
-}
 
 const getAll = async (req, res) => {
   try {
@@ -53,6 +44,19 @@ const getAll = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+const getMyDetail = async(req, res)=>{
+  try {
+    const id = req.user._id;
+    if (!id) {
+      return res.status(400).json({ message: "Invalid" });
+    }
+    const response = await userService.getById(id);
+    return res.status(200).json(response);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+}
 
 const getById = async (req, res) => {
   try {
@@ -97,8 +101,8 @@ const deleteById = async (req, res) => {
 module.exports = {
   create,
   getAll,
-  myDetail,
   getById,
+  getMyDetail,
   update,
   deleteById,
 };
